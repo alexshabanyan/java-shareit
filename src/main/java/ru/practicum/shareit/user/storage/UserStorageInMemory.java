@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.UniqueFieldConflictException;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.service.UserMapper;
+import ru.practicum.shareit.user.dto.UserMapper;
 
 import java.util.Collection;
 import java.util.HashMap;
