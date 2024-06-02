@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto get(Long userId) {
-        User user = userStorage.get(userId);
+        User user = userStorage.getById(userId);
         return UserMapper.toDto(user);
     }
 

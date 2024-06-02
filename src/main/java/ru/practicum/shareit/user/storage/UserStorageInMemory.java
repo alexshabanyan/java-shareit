@@ -43,10 +43,10 @@ public class UserStorageInMemory implements UserStorage {
     }
 
     @Override
-    public User get(Long id) {
+    public User getById(Long id) {
         User user = users.get(id);
         if (user == null) {
-            throw new NotFoundException(id);
+            throw new NotFoundException(id, String.format("Пользователь с id = %s отсутствует", id));
         }
         return user;
     }
@@ -74,5 +74,11 @@ public class UserStorageInMemory implements UserStorage {
     public boolean delete(Long id) {
         User oldValue = users.remove(id);
         return oldValue != null;
+    }
+
+    @Override
+    public boolean isExist(Long id) {
+        User user = users.get(id);
+        return user != null;
     }
 }

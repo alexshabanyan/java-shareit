@@ -22,7 +22,6 @@ public class UserDto {
 
     @NotNull(groups = ValidationGroup.OnCreate.class)
     @Size(min = 1, message = "Неверный формат почты")
-    @Email(message = "Неверный формат почты", regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
-            + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")
+    @Email(message = "Неверный формат почты")
     String email;
 }

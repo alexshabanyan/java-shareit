@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.NotAllowedException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.service.ItemMapper;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.Collection;

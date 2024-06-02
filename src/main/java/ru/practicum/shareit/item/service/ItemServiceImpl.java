@@ -2,7 +2,9 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemStorage;
 import ru.practicum.shareit.user.storage.UserStorage;
@@ -18,7 +20,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto create(ItemDto itemDto, Long userId) {
-        userStorage.get(userId);
+        boolean userExist = userStorage.isExist(userId);
+        if (!userExist) {
+            throw new NotFoundException(userId, String.format("Пользователь с id = %s отсутствует", userId));
+        }
         Item item = ItemMapper.toModel(itemDto, userId);
         Item newItem = itemStorage.create(item);
         return ItemMapper.toDto(newItem);
@@ -32,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Collection<ItemDto> getAll(Long userId) {
-        return itemStorage.getAll(userStorage.get(userId)).stream().map(ItemMapper::toDto).collect(Collectors.toList());
+        return itemStorage.getAll(userStorage.getById(userId)).stream().map(ItemMapper::toDto).collect(Collectors.toList());
     }
 
     @Override

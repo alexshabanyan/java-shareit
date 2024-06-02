@@ -1,12 +1,14 @@
-package ru.practicum.shareit.item.service;
+package ru.practicum.shareit.item.dto;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 
 @UtilityClass
 public class ItemMapper {
     public Item toModel(ItemDto itemDto, Long userId) {
+        if (itemDto == null || userId == null) {
+            throw new RuntimeException();
+        }
         return Item.builder()
                 .id(itemDto.getId())
                 .name(itemDto.getName())
@@ -17,6 +19,9 @@ public class ItemMapper {
     }
 
     public ItemDto toDto(Item item) {
+        if (item == null) {
+            throw new RuntimeException();
+        }
         return ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
@@ -26,6 +31,9 @@ public class ItemMapper {
     }
 
     public Item updateModel(Item oldItem, Item newItem) {
+        if (oldItem == null || newItem == null) {
+            throw new RuntimeException();
+        }
         Item.ItemBuilder builder = oldItem.toBuilder();
         if (newItem.getName() != null) {
             builder.name(newItem.getName());
