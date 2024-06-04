@@ -78,7 +78,6 @@ public class UserStorageInMemory implements UserStorage {
 
     @Override
     public boolean isExist(Long id) {
-        User user = users.get(id);
-        return user != null;
+        return users.containsKey(id);
     }
 }

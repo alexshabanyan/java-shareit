@@ -7,7 +7,7 @@ import ru.practicum.shareit.user.model.User;
 public class UserMapper {
     public User toModel(UserDto userDto) {
         if (userDto == null) {
-            throw new RuntimeException();
+            return null;
         }
         return User.builder()
                 .id(userDto.getId())
@@ -18,7 +18,7 @@ public class UserMapper {
 
     public UserDto toDto(User user) {
         if (user == null) {
-            throw new RuntimeException();
+            return null;
         }
         return UserDto.builder()
                 .id(user.getId())
@@ -29,7 +29,7 @@ public class UserMapper {
 
     public User updateModel(User oldUser, User newUser) {
         if (oldUser == null || newUser == null) {
-            throw new RuntimeException();
+            return null;
         }
         User.UserBuilder builder = oldUser.toBuilder();
         if (newUser.getName() != null) {

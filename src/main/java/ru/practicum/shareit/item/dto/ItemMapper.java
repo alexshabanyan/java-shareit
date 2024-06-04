@@ -7,7 +7,7 @@ import ru.practicum.shareit.item.model.Item;
 public class ItemMapper {
     public Item toModel(ItemDto itemDto, Long userId) {
         if (itemDto == null || userId == null) {
-            throw new RuntimeException();
+            return null;
         }
         return Item.builder()
                 .id(itemDto.getId())
@@ -20,7 +20,7 @@ public class ItemMapper {
 
     public ItemDto toDto(Item item) {
         if (item == null) {
-            throw new RuntimeException();
+            return null;
         }
         return ItemDto.builder()
                 .id(item.getId())
@@ -32,7 +32,7 @@ public class ItemMapper {
 
     public Item updateModel(Item oldItem, Item newItem) {
         if (oldItem == null || newItem == null) {
-            throw new RuntimeException();
+            return null;
         }
         Item.ItemBuilder builder = oldItem.toBuilder();
         if (newItem.getName() != null) {
