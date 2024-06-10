@@ -2,46 +2,56 @@ package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.storage.UserStorage;
+import ru.practicum.shareit.user.dto.UserMapper;
+import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserStorage userStorage;
+    private final UserMapper userMapper;
+    private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public UserDto create(UserDto userDto) {
-        User user = UserMapper.toModel(userDto);
-        User newUser = userStorage.create(user);
-        return UserMapper.toDto(newUser);
+        User user = userMapper.toModel(userDto);
+        User savedUser = userRepository.save(user);
+        return userMapper.toDto(savedUser);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto get(Long userId) {
-        User user = userStorage.getById(userId);
-        return UserMapper.toDto(user);
+        return userRepository.findById(userId, UserDto.class).orElseThrow(() -> new NotFoundException(userId));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Collection<UserDto> getAll() {
-        return userStorage.getAll().stream().map(UserMapper::toDto).collect(Collectors.toList());
+        return userRepository.findBy(UserDto.class);
     }
 
     @Override
-    public UserDto update(UserDto userDto) {
-        User user = UserMapper.toModel(userDto);
-        User updatedUser = userStorage.update(user);
-        return UserMapper.toDto(updatedUser);
+    @Transactional
+    public UserDto update(UserDto userDto, Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            return userMapper.toDto(userRepository.save(userMapper.updateModel(user.get(), userDto)));
+        } else {
+            throw new NotFoundException(userDto.getId());
+        }
     }
 
     @Override
+    @Transactional
     public void delete(Long userId) {
-        userStorage.delete(userId);
+        userRepository.deleteById(userId);
     }
 }

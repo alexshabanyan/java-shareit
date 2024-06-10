@@ -1,43 +1,17 @@
 package ru.practicum.shareit.user.dto;
 
-import lombok.experimental.UtilityClass;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import ru.practicum.shareit.user.model.User;
 
-@UtilityClass
-public class UserMapper {
-    public User toModel(UserDto userDto) {
-        if (userDto == null) {
-            return null;
-        }
-        return User.builder()
-                .id(userDto.getId())
-                .name(userDto.getName())
-                .email(userDto.getEmail())
-                .build();
-    }
+@Mapper(componentModel = "spring")
+public interface UserMapper {
+    UserDto toDto(User user);
 
-    public UserDto toDto(User user) {
-        if (user == null) {
-            return null;
-        }
-        return UserDto.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .build();
-    }
+    User toModel(UserDto userDto);
 
-    public User updateModel(User oldUser, User newUser) {
-        if (oldUser == null || newUser == null) {
-            return null;
-        }
-        User.UserBuilder builder = oldUser.toBuilder();
-        if (newUser.getName() != null) {
-            builder.name(newUser.getName());
-        }
-        if (newUser.getEmail() != null) {
-            builder.email(newUser.getEmail());
-        }
-        return builder.build();
-    }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    User updateModel(@MappingTarget User user, UserDto updaterUserDto);
 }

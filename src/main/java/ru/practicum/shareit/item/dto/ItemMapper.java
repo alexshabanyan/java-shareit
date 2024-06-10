@@ -1,49 +1,28 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.experimental.UtilityClass;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import ru.practicum.shareit.booking.dto.BookingForItemExtendDto;
 import ru.practicum.shareit.item.model.Item;
 
-@UtilityClass
-public class ItemMapper {
-    public Item toModel(ItemDto itemDto, Long userId) {
-        if (itemDto == null || userId == null) {
-            return null;
-        }
-        return Item.builder()
-                .id(itemDto.getId())
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .available(itemDto.getAvailable())
-                .ownerId(userId)
-                .build();
-    }
+import java.util.List;
 
-    public ItemDto toDto(Item item) {
-        if (item == null) {
-            return null;
-        }
-        return ItemDto.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.getAvailable())
-                .build();
-    }
+@Mapper(componentModel = "spring")
+public interface ItemMapper {
+    ItemDto toDto(Item item);
 
-    public Item updateModel(Item oldItem, Item newItem) {
-        if (oldItem == null || newItem == null) {
-            return null;
-        }
-        Item.ItemBuilder builder = oldItem.toBuilder();
-        if (newItem.getName() != null) {
-            builder.name(newItem.getName());
-        }
-        if (newItem.getDescription() != null) {
-            builder.description(newItem.getDescription());
-        }
-        if (newItem.getAvailable() != null) {
-            builder.available(newItem.getAvailable());
-        }
-        return builder.build();
-    }
+    @Mapping(target = "requestId", ignore = true)
+    Item toModel(ItemDto itemDto, Long ownerId);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "ownerId", ignore = true)
+    @Mapping(target = "requestId", ignore = true)
+    void updateModel(@MappingTarget Item item, ItemDto updaterItemDto);
+
+    @Mapping(target = "id", source = "item.id")
+    ItemExtendDto toItemBookingInfoDto(Item item, List<CommentDto> comments,
+                                       BookingForItemExtendDto lastBooking, BookingForItemExtendDto nextBooking);
 }
