@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemExtendDto;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.utils.Headers;
 import ru.practicum.shareit.validation.ValidationGroup;
 
 import javax.validation.Valid;
@@ -26,26 +29,24 @@ import java.util.List;
 @Slf4j
 @Validated
 public class ItemController {
-    private static final String HEADER_USER_ID = "X-Sharer-User-Id";
-
     private final ItemService itemService;
 
     @PostMapping
     @Validated({ValidationGroup.OnCreate.class})
-    public ItemDto createItem(@Valid @RequestBody ItemDto itemDto,
-                              @RequestHeader(HEADER_USER_ID) Long userId) {
+    public ItemDto createItem(@RequestHeader(Headers.HEADER_USER_ID) Long userId,
+                              @Valid @RequestBody ItemDto itemDto) {
         log.info("Создание предмета itemDto={}", itemDto);
         return itemService.create(itemDto, userId);
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@PathVariable Long itemId) {
+    public ItemExtendDto getItem(@PathVariable Long itemId, @RequestHeader(Headers.HEADER_USER_ID) Long userId) {
         log.info("Получение предмета itemId={}", itemId);
-        return itemService.get(itemId);
+        return itemService.get(itemId, userId);
     }
 
     @GetMapping
-    public Collection<ItemDto> getAllUserItems(@RequestHeader(HEADER_USER_ID) Long userId) {
+    public Collection<ItemExtendDto> getAllUserItems(@RequestHeader(Headers.HEADER_USER_ID) Long userId) {
         log.info("Получение всех предметов пользователя userId={}", userId);
         return itemService.getAll(userId);
     }
@@ -54,9 +55,9 @@ public class ItemController {
     @Validated({ValidationGroup.OnUpdate.class})
     public ItemDto updateItem(@PathVariable Long itemId,
                               @Valid @RequestBody ItemDto itemDto,
-                              @RequestHeader(HEADER_USER_ID) Long userId) {
+                              @RequestHeader(Headers.HEADER_USER_ID) Long userId) {
         log.info("Обновление предмета пользователя userId={}, itemId={}, itemDto={}", userId, itemId, itemDto);
-        return itemService.update(itemDto.toBuilder().id(itemId).build(), userId);
+        return itemService.update(itemDto, itemId, userId);
     }
 
     @GetMapping("/search")
@@ -66,5 +67,13 @@ public class ItemController {
             return List.of();
         }
         return itemService.searchAvailableItems(text);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto createComment(@RequestBody @Valid CommentDto commentDto,
+                                    @PathVariable Long itemId,
+                                    @RequestHeader(Headers.HEADER_USER_ID) Long userId) {
+        log.info("Создание отзыва comment={} на предмет itemId={} от пользователя userId={}", commentDto, itemId, userId);
+        return itemService.createComment(commentDto, itemId, userId);
     }
 }

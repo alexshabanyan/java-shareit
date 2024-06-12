@@ -49,7 +49,7 @@ public class UserController {
     @Validated({ValidationGroup.OnUpdate.class})
     public UserDto updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
         log.info("Обновление пользователя userDto={}", userDto);
-        return userService.update(userDto.toBuilder().id(userId).build());
+        return userService.update(userDto, userId);
     }
 
     @DeleteMapping("{userId}")
