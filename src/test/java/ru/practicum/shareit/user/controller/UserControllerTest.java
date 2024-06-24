@@ -15,9 +15,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserMapperImpl;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.dto.UserMapper;
+import ru.practicum.shareit.user.model.UserMapper;
+import ru.practicum.shareit.user.model.UserMapperImpl;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.nio.charset.StandardCharsets;

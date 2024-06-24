@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.request.args.CreateRequestArgs;
 import ru.practicum.shareit.request.model.Request;
-import ru.practicum.shareit.request.dto.RequestMapper;
+import ru.practicum.shareit.request.model.RequestMapper;
 import ru.practicum.shareit.request.storage.RequestRepository;
 import ru.practicum.shareit.user.storage.UserRepository;
 import ru.practicum.shareit.utils.Pagination;

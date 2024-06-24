@@ -1,11 +1,12 @@
-package ru.practicum.shareit.request.dto;
+package ru.practicum.shareit.request.model;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.practicum.shareit.item.dto.ItemRequestDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.args.CreateRequestArgs;
-import ru.practicum.shareit.request.model.Request;
+import ru.practicum.shareit.request.dto.RequestDto;
+import ru.practicum.shareit.request.dto.RequestWithItemInfoDto;
 
 import java.util.LinkedList;
 import java.util.List;

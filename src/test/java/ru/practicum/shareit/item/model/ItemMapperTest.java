@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.ItemMapper;
-import ru.practicum.shareit.item.dto.ItemMapperImpl;
 import ru.practicum.shareit.item.dto.ItemWithExtendInfoDto;
 
 import java.time.LocalDateTime;

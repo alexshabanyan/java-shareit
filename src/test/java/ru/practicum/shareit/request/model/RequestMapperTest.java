@@ -4,8 +4,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import ru.practicum.shareit.item.dto.ItemRequestDto;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.dto.RequestMapper;
-import ru.practicum.shareit.request.dto.RequestMapperImpl;
 import ru.practicum.shareit.request.dto.RequestWithItemInfoDto;
 
 import java.time.LocalDateTime;

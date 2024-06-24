@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.item.model;
 
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -10,8 +10,9 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.args.CreateCommentArgs;
 import ru.practicum.shareit.item.args.CreateItemArgs;
 import ru.practicum.shareit.item.args.UpdateItemArgs;
-import ru.practicum.shareit.item.model.Comment;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemWithExtendInfoDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;

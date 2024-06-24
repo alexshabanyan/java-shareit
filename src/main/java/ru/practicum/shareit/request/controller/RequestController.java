@@ -16,7 +16,7 @@ import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.dto.RequestWithItemInfoDto;
 import ru.practicum.shareit.request.model.Request;
-import ru.practicum.shareit.request.dto.RequestMapper;
+import ru.practicum.shareit.request.model.RequestMapper;
 import ru.practicum.shareit.request.service.RequestService;
 import ru.practicum.shareit.utils.Headers;
 

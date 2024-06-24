@@ -14,7 +14,7 @@ import ru.practicum.shareit.item.args.CreateItemArgs;
 import ru.practicum.shareit.item.args.UpdateItemArgs;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.dto.ItemMapper;
+import ru.practicum.shareit.item.model.ItemMapper;
 import ru.practicum.shareit.item.storage.CommentRepository;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.CreateBookingDto;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.booking.dto.BookingMapper;
+import ru.practicum.shareit.booking.model.BookingMapper;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.utils.Headers;
