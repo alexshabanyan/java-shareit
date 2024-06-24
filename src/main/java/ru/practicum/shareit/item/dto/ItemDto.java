@@ -29,4 +29,6 @@ public class ItemDto {
 
     @NotNull(groups = ValidationGroup.OnCreate.class)
     Boolean available;
+
+    Long requestId;
 }

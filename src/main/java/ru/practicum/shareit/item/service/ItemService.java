@@ -1,21 +1,29 @@
 package ru.practicum.shareit.item.service;
 
-import ru.practicum.shareit.item.dto.CommentDto;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemExtendDto;
+import ru.practicum.shareit.item.args.CreateCommentArgs;
+import ru.practicum.shareit.item.args.CreateItemArgs;
+import ru.practicum.shareit.item.args.UpdateItemArgs;
+import ru.practicum.shareit.item.model.Comment;
+import ru.practicum.shareit.item.model.Item;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public interface ItemService {
-    ItemDto create(ItemDto itemDto, Long userId);
+    Item create(CreateItemArgs createItemArgs);
 
-    ItemExtendDto get(Long id, Long userId);
+    Item get(Long id, Long userId);
 
-    Collection<ItemExtendDto> getAll(Long userId);
+    List<Item> getAll(Long userId, int from, int size);
 
-    ItemDto update(ItemDto itemDto, Long itemId, Long userId);
+    Item update(UpdateItemArgs updateItemArgs, Long itemId, Long userId);
 
-    Collection<ItemDto> searchAvailableItems(String text);
+    List<Item> searchAvailableItems(String text, int from, int size);
 
-    CommentDto createComment(CommentDto commentDto, Long itemId, Long userId);
+    Comment createComment(CreateCommentArgs createCommentArgs);
+
+    Map<Long, List<Comment>> getItemCommentMapping(Set<Long> itemIds);
+
+    Map<Long, List<Item>> getRequestItemMapping(Set<Long> requestIds);
 }
