@@ -39,7 +39,7 @@ public class BookingController {
     public BookingDto createBooking(@RequestHeader(Headers.HEADER_USER_ID) Long userId,
                                     @RequestBody @Valid CreateBookingDto createBookingDto) {
         log.info("Создание бронирования booking={}, userId={}", createBookingDto, userId);
-        Booking booking = bookingService.createBooking(bookingMapper.toCreateBookingArgs(createBookingDto, userId));
+        Booking booking = bookingService.createBooking(createBookingDto, userId);
         return bookingMapper.toDto(booking);
     }
 

@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.args.CreateBookingArgs;
+import ru.practicum.shareit.booking.dto.CreateBookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -64,8 +64,8 @@ class BookingServiceImplTest {
         Item notAvailableItem = itemRepository.save(new Item(null, "Item", "Item desc", false, owner.getId(), null));
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = start.plusDays(1);
-        assertThrows(ValidationException.class, () -> bookingService.createBooking(new CreateBookingArgs(notAvailableItem.getId(), start, end, booker.getId())));
-        assertThrows(NotFoundException.class, () -> bookingService.createBooking(new CreateBookingArgs(item.getId(), start, end, owner.getId())));
+        assertThrows(ValidationException.class, () -> bookingService.createBooking(new CreateBookingDto(notAvailableItem.getId(), start, end), booker.getId()));
+        assertThrows(NotFoundException.class, () -> bookingService.createBooking(new CreateBookingDto(item.getId(), start, end), owner.getId()));
     }
 
     @ParameterizedTest
@@ -73,7 +73,7 @@ class BookingServiceImplTest {
     void onlyCorrectUserShouldSeeBooking(Long userId, boolean canFetch) {
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = start.plusDays(1);
-        Booking booking = bookingService.createBooking(new CreateBookingArgs(item.getId(), start, end, booker.getId()));
+        Booking booking = bookingService.createBooking(new CreateBookingDto(item.getId(), start, end), booker.getId());
 
         boolean ableToFetch;
         try {
@@ -99,18 +99,18 @@ class BookingServiceImplTest {
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = start.plusDays(1);
 
-        Booking bookingToApprove = bookingService.createBooking(new CreateBookingArgs(item.getId(), start, end, booker.getId()));
+        Booking bookingToApprove = bookingService.createBooking(new CreateBookingDto(item.getId(), start, end),  booker.getId());
         assertThat(bookingToApprove.getStatus(), equalTo(BookingStatus.WAITING));
         Booking updatedBookingApproved = bookingService.updateBookingStatus(owner.getId(), bookingToApprove.getId(), true);
         assertThat(updatedBookingApproved.getStatus(), equalTo(BookingStatus.APPROVED));
 
-        Booking bookingToReject = bookingService.createBooking(new CreateBookingArgs(item.getId(), start, end, booker.getId()));
+        Booking bookingToReject = bookingService.createBooking(new CreateBookingDto(item.getId(), start, end), booker.getId());
         assertThat(bookingToReject.getStatus(), equalTo(BookingStatus.WAITING));
         Booking updatedBookingRejected = bookingService.updateBookingStatus(owner.getId(), bookingToReject.getId(), false);
         assertThat(updatedBookingRejected.getStatus(), equalTo(BookingStatus.REJECTED));
 
 
-        Booking bookingToDoubleUpdate = bookingService.createBooking(new CreateBookingArgs(item.getId(), LocalDateTime.now().minusYears(1), LocalDateTime.now().minusYears(1).plusDays(1), booker.getId()));
+        Booking bookingToDoubleUpdate = bookingService.createBooking(new CreateBookingDto(item.getId(), LocalDateTime.now().minusYears(1), LocalDateTime.now().minusYears(1).plusDays(1)), booker.getId());
         assertThat(bookingToDoubleUpdate.getStatus(), equalTo(BookingStatus.WAITING));
         // update by not owner
         assertThrows(NotFoundException.class, () -> bookingService.updateBookingStatus(otherUser.getId(), bookingToDoubleUpdate.getId(), true));

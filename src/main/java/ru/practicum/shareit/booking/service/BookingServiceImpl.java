@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.args.CreateBookingArgs;
+import ru.practicum.shareit.booking.dto.CreateBookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingMapper;
 import ru.practicum.shareit.booking.model.BookingState;
@@ -39,16 +39,16 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public Booking createBooking(CreateBookingArgs args) {
-        User user = userRepository.findById(args.getBookerId()).orElseThrow(() -> new NotFoundException(args.getBookerId()));
-        Item item = itemRepository.findById(args.getItemId()).orElseThrow(() -> new NotFoundException(args.getItemId()));
+    public Booking createBooking(CreateBookingDto createBookingDto, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId));
+        Item item = itemRepository.findById(createBookingDto.getItemId()).orElseThrow(() -> new NotFoundException(createBookingDto.getItemId()));
         if (!item.getAvailable()) {
             throw new ValidationException("Предмет недоступен для бронирования");
         }
         if (isOwner(user, item)) {
             throw new NotFoundException(item.getId(), "Невозможно забронировать свой предмет");
         }
-        Booking booking = bookingMapper.toModel(args, item, user);
+        Booking booking = bookingMapper.toModel(createBookingDto, item, user);
         booking.setStatus(BookingStatus.WAITING);
         return bookingRepository.save(booking);
     }

@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.args.CreateBookingArgs;
+import ru.practicum.shareit.booking.dto.CreateBookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -63,15 +63,15 @@ class GetBookingsForUserAndItemOwnerTest {
         itemByOwner1 = itemRepository.save(new Item(null, "Item", "Item desc", true, owner1.getId(), null));
         itemByOwner2 = itemRepository.save(new Item(null, "Item", "Item desc", true, owner2.getId(), null));
 
-        pastBooking = bookingService.createBooking(new CreateBookingArgs(itemByOwner1.getId(), LocalDateTime.now().minusYears(1), LocalDateTime.now().minusYears(1).plusDays(1), booker.getId()));
+        pastBooking = bookingService.createBooking(new CreateBookingDto(itemByOwner1.getId(), LocalDateTime.now().minusYears(1), LocalDateTime.now().minusYears(1).plusDays(1)), booker.getId());
         bookingService.updateBookingStatus(itemByOwner1.getOwnerId(), pastBooking.getId(), true);
 
-        futureBooking = bookingService.createBooking(new CreateBookingArgs(itemByOwner1.getId(), LocalDateTime.now().plusYears(1), LocalDateTime.now().plusYears(1).plusDays(1), booker.getId()));
+        futureBooking = bookingService.createBooking(new CreateBookingDto(itemByOwner1.getId(), LocalDateTime.now().plusYears(1), LocalDateTime.now().plusYears(1).plusDays(1)), booker.getId());
         bookingService.updateBookingStatus(itemByOwner1.getOwnerId(), futureBooking.getId(), true);
 
-        currentBooking = bookingService.createBooking(new CreateBookingArgs(itemByOwner1.getId(), LocalDateTime.now(), LocalDateTime.now().plusDays(1), booker.getId()));
+        currentBooking = bookingService.createBooking(new CreateBookingDto(itemByOwner1.getId(), LocalDateTime.now(), LocalDateTime.now().plusDays(1)), booker.getId());
 
-        futureRejectedBooking = bookingService.createBooking(new CreateBookingArgs(itemByOwner2.getId(), LocalDateTime.now().plusMinutes(30), LocalDateTime.now().plusMinutes(10).plusDays(1), booker.getId()));
+        futureRejectedBooking = bookingService.createBooking(new CreateBookingDto(itemByOwner2.getId(), LocalDateTime.now().plusMinutes(30), LocalDateTime.now().plusMinutes(10).plusDays(1)), booker.getId());
         bookingService.updateBookingStatus(itemByOwner2.getOwnerId(), futureRejectedBooking.getId(), false);
 
 
@@ -79,7 +79,7 @@ class GetBookingsForUserAndItemOwnerTest {
         User otherOwner = userRepository.save(new User(null, "Other owner", "otherOwner@mail.com"));
         Item otherItem = itemRepository.save(new Item(null, "Item", "Item desc", true, otherOwner.getId(), null));
 
-        Booking otherBooking = bookingService.createBooking(new CreateBookingArgs(otherItem.getId(), LocalDateTime.now().minusYears(1), LocalDateTime.now().minusYears(1).plusDays(1), otherBooker.getId()));
+        Booking otherBooking = bookingService.createBooking(new CreateBookingDto(otherItem.getId(), LocalDateTime.now().minusYears(1), LocalDateTime.now().minusYears(1).plusDays(1)), otherBooker.getId());
     }
 
     @AfterAll

@@ -28,6 +28,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.times;
@@ -72,10 +73,10 @@ class BookingControllerTest {
         final LocalDateTime start = booking.getStart();
         final LocalDateTime end = booking.getEnd();
 
-        when(bookingService.createBooking(any())).thenReturn(booking);
+        when(bookingService.createBooking(any(), anyLong())).thenReturn(booking);
 
         assertThat(performCreateBooking(userId, itemId, start, end).getStatus(), is(200));
-        verify(bookingService, times(1)).createBooking(any());
+        verify(bookingService, times(1)).createBooking(any(), anyLong());
 
         assertThat(performCreateBooking(userId, null, start, end).getStatus(), is(400));
         assertThat(performCreateBooking(userId, itemId, LocalDateTime.now().minusYears(1), end).getStatus(), is(400));
