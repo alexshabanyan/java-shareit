@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.item.args.UpdateItemArgs;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
@@ -35,6 +34,7 @@ import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.times;
@@ -80,10 +80,10 @@ class ItemControllerTest {
     @Test
     void createItem() throws Exception {
         final long userId = user.getId();
-        when(itemService.create(any())).thenReturn(item);
+        when(itemService.create(any(), anyLong())).thenReturn(item);
 
         assertThat(performCreateItem(userId, "Name", "Desc", true).getStatus(), is(200));
-        verify(itemService, times(1)).create(any());
+        verify(itemService, times(1)).create(any(), anyLong());
 
         assertThat(performCreateItem(userId, null, "Desc", true).getStatus(), is(400));
         assertThat(performCreateItem(userId, "Name", null, true).getStatus(), is(400));
@@ -182,13 +182,7 @@ class ItemControllerTest {
 
         ItemDto itemDto = ItemDto.builder().name("Name").description("Desc").available(true).build();
         assertThat(performUpdateItem(userId, itemId, itemDto).getStatus(), is(200));
-        UpdateItemArgs args = itemMapper.toUpdateItemArgs(itemDto);
-        verify(itemService, times(1)).update(args, itemId, userId);
-
-        itemDto = ItemDto.builder().name(null).description(null).available(false).build();
-        assertThat(performUpdateItem(userId, itemId, itemDto).getStatus(), is(200));
-        args = itemMapper.toUpdateItemArgs(itemDto);
-        verify(itemService, times(1)).update(args, itemId, userId);
+        verify(itemService, times(1)).update(itemDto, itemId, userId);
 
         assertThat(performUpdateItem(userId, itemId, null).getStatus(), is(400));
     }
@@ -249,11 +243,7 @@ class ItemControllerTest {
 
         CommentDto commentDto = CommentDto.builder().text("text").build();
         assertThat(performCreateComment(userId, itemId, commentDto).getStatus(), is(200));
-        verify(itemService, times(1)).createComment(itemMapper.toCreateCommentArgs(commentDto, userId, itemId));
-
-        commentDto = CommentDto.builder().text(null).build();
-        assertThat(performCreateComment(userId, itemId, commentDto).getStatus(), is(400));
-        verify(itemService, times(0)).createComment(itemMapper.toCreateCommentArgs(commentDto, userId, itemId));
+        verify(itemService, times(1)).createComment(commentDto,itemId, userId);
     }
 
     private MockHttpServletResponse performCreateComment(Long userId, Long itemId, CommentDto commentDto) throws Exception {

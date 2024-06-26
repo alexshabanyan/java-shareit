@@ -49,7 +49,7 @@ public class ItemController {
     public ItemDto createItem(@RequestHeader(Headers.HEADER_USER_ID) Long userId,
                               @Valid @RequestBody ItemDto itemDto) {
         log.info("Создание предмета itemDto={}", itemDto);
-        Item item = itemService.create(itemMapper.toCreateItemArgs(itemDto, userId));
+        Item item = itemService.create(itemDto, userId);
         return itemMapper.toDto(item);
     }
 
@@ -87,7 +87,7 @@ public class ItemController {
                               @Valid @RequestBody ItemDto itemDto,
                               @RequestHeader(Headers.HEADER_USER_ID) Long userId) {
         log.info("Обновление предмета пользователя userId={}, itemId={}, itemDto={}", userId, itemId, itemDto);
-        Item updatedItem = itemService.update(itemMapper.toUpdateItemArgs(itemDto), itemId, userId);
+        Item updatedItem = itemService.update(itemDto, itemId, userId);
         return itemMapper.toDto(updatedItem);
     }
 
@@ -107,7 +107,7 @@ public class ItemController {
                                     @PathVariable Long itemId,
                                     @RequestHeader(Headers.HEADER_USER_ID) Long userId) {
         log.info("Создание отзыва comment={} на предмет itemId={} от пользователя userId={}", commentDto, itemId, userId);
-        Comment comment = itemService.createComment(itemMapper.toCreateCommentArgs(commentDto, userId, itemId));
+        Comment comment = itemService.createComment(commentDto, itemId, userId);
         return itemMapper.toDto(comment);
     }
 }

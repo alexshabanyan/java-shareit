@@ -9,9 +9,8 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.NotAllowedException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.item.args.CreateCommentArgs;
-import ru.practicum.shareit.item.args.CreateItemArgs;
-import ru.practicum.shareit.item.args.UpdateItemArgs;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.ItemMapper;
@@ -41,9 +40,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public Item create(CreateItemArgs args) {
-        userRepository.findById(args.getOwnerId()).orElseThrow(() -> new NotFoundException(args.getOwnerId()));
-        return itemRepository.save(itemMapper.toModel(args));
+    public Item create(ItemDto itemDto, Long userId) {
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId));
+        Item test = itemMapper.toModel(itemDto, userId);
+        return itemRepository.save(itemMapper.toModel(itemDto, userId));
     }
 
     @Override
@@ -61,14 +61,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public Item update(UpdateItemArgs args, Long itemId, Long userId) {
+    public Item update(ItemDto itemDto, Long itemId, Long userId) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId));
         Item savedItem = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException(itemId));
         if (!Objects.equals(userId, savedItem.getOwnerId())) {
             throw new NotAllowedException("Изменять предмет может только владелец");
         }
-        itemMapper.updateModel(savedItem, args);
+        itemMapper.updateModel(savedItem, itemDto);
         return itemRepository.save(savedItem);
     }
 
@@ -81,17 +81,19 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public Comment createComment(CreateCommentArgs args) {
-        User user = userRepository.findById(args.getUserId()).orElseThrow(() -> new NotFoundException(args.getUserId()));
-        Comment savedComment = commentRepository.findByAuthorIdAndItemId(args.getUserId(), args.getItemId());
+    public Comment createComment(CommentDto commentDto, Long itemId, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId));
+        Comment savedComment = commentRepository.findByAuthorIdAndItemId(userId, itemId);
         if (savedComment != null) {
             throw new ValidationException("Отзыв уже существует");
         }
-        List<Booking> bookings = bookingRepository.findAllByItemIdAndBookerIdAndEndBefore(args.getItemId(), args.getUserId(), LocalDateTime.now());
+        List<Booking> bookings = bookingRepository.findAllByItemIdAndBookerIdAndEndBefore(itemId, userId, LocalDateTime.now());
         bookings.stream().filter(b -> b.getStatus() == BookingStatus.APPROVED).findFirst().orElseThrow(() ->
                 new ValidationException("Пользователь не бронировал этот предмет для оставления отзывов"));
 
-        return commentRepository.save(itemMapper.toModel(args, user));
+        Comment test = itemMapper.toModel(commentDto, user, itemId);
+
+        return commentRepository.save(itemMapper.toModel(commentDto, user, itemId));
     }
 
     @Override

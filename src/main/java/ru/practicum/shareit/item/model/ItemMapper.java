@@ -7,9 +7,6 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import ru.practicum.shareit.booking.dto.BookingForItemExtendDto;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.item.args.CreateCommentArgs;
-import ru.practicum.shareit.item.args.CreateItemArgs;
-import ru.practicum.shareit.item.args.UpdateItemArgs;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemWithExtendInfoDto;
@@ -24,12 +21,8 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface ItemMapper {
-    CreateItemArgs toCreateItemArgs(ItemDto itemDto, Long ownerId);
-
-    UpdateItemArgs toUpdateItemArgs(ItemDto itemDto);
-
     @Mapping(target = "id", ignore = true)
-    Item toModel(CreateItemArgs args);
+    Item toModel(ItemDto itemDto, Long ownerId);
 
     ItemDto toDto(Item item);
 
@@ -37,7 +30,7 @@ public interface ItemMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "ownerId", ignore = true)
     @Mapping(target = "requestId", ignore = true)
-    void updateModel(@MappingTarget Item item, UpdateItemArgs updater);
+    void updateModel(@MappingTarget Item item, ItemDto itemDto);
 
     @Mapping(target = "itemId", source = "booking.item.id")
     @Mapping(target = "bookerId", source = "booking.booker.id")
@@ -79,14 +72,6 @@ public interface ItemMapper {
         }
         return dtos;
     }
-
-    @Mapping(target = "itemId", source = "itemId")
-    CreateCommentArgs toCreateCommentArgs(CommentDto commentDto, Long userId, Long itemId);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "created", ignore = true)
-    @Mapping(target = "author", source = "author")
-    Comment toModel(CreateCommentArgs args, User author);
 
     @Mapping(target = "itemId", source = "itemId")
     @Mapping(target = "author", source = "author")
