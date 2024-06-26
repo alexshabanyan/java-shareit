@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.request.args.CreateRequestArgs;
+import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.request.storage.RequestRepository;
 import ru.practicum.shareit.user.model.User;
@@ -38,7 +38,7 @@ class RequestServiceImplTest {
 
     @Test
     void shouldCreateAndGetRequestsByCorrectUsers() {
-        Request request = requestService.createRequest(new CreateRequestArgs(userWithRequests.getId(), "Request desc 1"));
+        Request request = requestService.createRequest(new RequestDto(null, "Request desc 1", null), userWithRequests.getId());
         Request savedRequest = requestRepository.findById(request.getId()).orElseThrow();
         assertEquals(savedRequest, request);
         assertEquals(savedRequest, requestService.getRequest(userWithRequests.getId(), request.getId()));

@@ -4,7 +4,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.practicum.shareit.item.dto.ItemRequestDto;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.args.CreateRequestArgs;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.dto.RequestWithItemInfoDto;
 
@@ -15,11 +14,9 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface RequestMapper {
-    CreateRequestArgs toCreateRequestArgs(RequestDto requestDto, Long userId);
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "created", ignore = true)
-    Request toModel(CreateRequestArgs createRequestArgs);
+    Request toModel(RequestDto requestDto, Long userId);
 
     RequestDto toDto(Request request);
 

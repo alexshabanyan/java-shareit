@@ -6,7 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.request.args.CreateRequestArgs;
+import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.request.model.RequestMapper;
 import ru.practicum.shareit.request.storage.RequestRepository;
@@ -25,9 +25,12 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional
-    public Request createRequest(CreateRequestArgs args) {
-        userRepository.findById(args.getUserId()).orElseThrow(() -> new NotFoundException(args.getUserId()));
-        return requestRepository.save(requestMapper.toModel(args));
+    public Request createRequest(RequestDto requestDto, Long userId) {
+        boolean isUserExist =  userRepository.existsById(userId);
+        if (!isUserExist) {
+            throw new NotFoundException(userId);
+        }
+        return requestRepository.save(requestMapper.toModel(requestDto, userId));
     }
 
     @Override

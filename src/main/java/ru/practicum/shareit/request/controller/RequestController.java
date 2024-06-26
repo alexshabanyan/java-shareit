@@ -43,7 +43,7 @@ public class RequestController {
     RequestDto createRequest(@RequestHeader(Headers.HEADER_USER_ID) Long userId,
                              @Valid @RequestBody RequestDto requestDto) {
         log.info("Создание запроса requestDto={}", requestDto);
-        Request request = requestService.createRequest(requestMapper.toCreateRequestArgs(requestDto, userId));
+        Request request = requestService.createRequest(requestDto, userId);
         return requestMapper.toDto(request);
     }
 

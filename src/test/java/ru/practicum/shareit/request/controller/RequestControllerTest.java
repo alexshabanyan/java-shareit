@@ -33,6 +33,7 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anySet;
 import static org.mockito.Mockito.times;
@@ -73,15 +74,11 @@ class RequestControllerTest {
     @Test
     void createRequest() throws Exception {
         final long userId = user.getId();
-        when(requestService.createRequest(any())).thenReturn(request);
+        when(requestService.createRequest(any(), anyLong())).thenReturn(request);
 
         RequestDto requestDto = RequestDto.builder().description("Desc").build();
         assertThat(performCreateRequest(userId, requestDto).getStatus(), is(200));
-        verify(requestService, times(1)).createRequest(requestMapper.toCreateRequestArgs(requestDto, userId));
-
-        requestDto = RequestDto.builder().description(null).build();
-        assertThat(performCreateRequest(userId, requestDto).getStatus(), is(400));
-        verify(requestService, times(0)).createRequest(requestMapper.toCreateRequestArgs(requestDto, userId));
+        verify(requestService, times(1)).createRequest(requestDto, userId);
     }
 
     private MockHttpServletResponse performCreateRequest(Long userId, RequestDto requestDto) throws Exception {
