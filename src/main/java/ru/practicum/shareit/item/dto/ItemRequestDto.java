@@ -4,15 +4,12 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import ru.practicum.shareit.booking.dto.BookingForItemExtendDto;
-
-import java.util.List;
 
 @Value
 @RequiredArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class ItemExtendDto {
+public class ItemRequestDto {
     @EqualsAndHashCode.Include
     Long id;
 
@@ -22,9 +19,5 @@ public class ItemExtendDto {
 
     Boolean available;
 
-    BookingForItemExtendDto lastBooking;
-
-    BookingForItemExtendDto nextBooking;
-
-    List<CommentDto> comments;
+    Long requestId;
 }
