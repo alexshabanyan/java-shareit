@@ -7,8 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 
-import javax.validation.Valid;
-
 @Controller
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
@@ -17,7 +15,7 @@ public class UserController {
     private final UserClient userClient;
 
     @PostMapping
-    public ResponseEntity<Object> createUser(@Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<Object> createUser(@RequestBody UserDto userDto) {
         log.info("Создание пользователя userDto={}", userDto);
         return userClient.createUser(userDto);
     }
@@ -35,7 +33,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public ResponseEntity<Object> updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<Object> updateUser(@PathVariable Long userId, @RequestBody UserDto userDto) {
         log.info("Обновление пользователя userDto={}", userDto);
         return userClient.updateUser(userId, userDto);
     }
