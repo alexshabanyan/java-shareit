@@ -24,6 +24,7 @@ import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.utils.Headers;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -34,7 +35,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/items")
 @RequiredArgsConstructor
 @Slf4j
-@Validated
 public class ItemController {
     private final ItemMapper itemMapper;
     private final ItemService itemService;
@@ -49,7 +49,8 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemWithExtendInfoDto getItem(@PathVariable Long itemId, @RequestHeader(Headers.HEADER_USER_ID) Long userId) {
+    public ItemWithExtendInfoDto getItem(@PathVariable Long itemId,
+                                         @RequestHeader(Headers.HEADER_USER_ID) Long userId) {
         log.info("Получение предмета itemId={}", itemId);
         Item item = itemService.get(itemId, userId);
         Map<Long, List<Comment>> commentsMapping = itemService.getItemCommentMapping(Set.of(item.getId()));
@@ -65,10 +66,10 @@ public class ItemController {
 
     @GetMapping
     public Collection<ItemWithExtendInfoDto> getAllUserItems(@RequestHeader(Headers.HEADER_USER_ID) Long userId,
-                                                             @RequestParam(defaultValue = "0") Integer from,
-                                                             @RequestParam(defaultValue = "10") Integer size) {
+                                                             @RequestParam Integer from,
+                                                             @RequestParam Integer size) {
         log.info("Получение всех предметов пользователя userId={}", userId);
-        List<Item> allItems = itemService.getAll(userId, from, size);
+        List<Item> allItems = itemService.getAll(userId, from, size).stream().sorted(Comparator.comparing(Item::getId)).collect(Collectors.toList());
         Set<Long> itemIds = allItems.stream().map(Item::getId).collect(Collectors.toSet());
         Map<Long, List<Comment>> commentsMapping = itemService.getItemCommentMapping(itemIds);
         Map<Long, List<Booking>> lastBookingMapping = bookingService.getItemLastBookingMapping(itemIds);
@@ -87,12 +88,9 @@ public class ItemController {
 
     @GetMapping("/search")
     public Collection<ItemDto> searchAvailableItems(@RequestParam String text,
-                                                    @RequestParam(defaultValue = "0") Integer from,
-                                                    @RequestParam(defaultValue = "10") Integer size) {
+                                                    @RequestParam Integer from,
+                                                    @RequestParam Integer size) {
         log.info("Поиск доступных предметов text={}", text);
-        if (text.isBlank()) {
-            return List.of();
-        }
         return itemService.searchAvailableItems(text, from, size).stream().map(itemMapper::toDto).collect(Collectors.toList());
     }
 

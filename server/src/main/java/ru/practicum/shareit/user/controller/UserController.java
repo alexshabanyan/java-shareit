@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
 @Slf4j
-@Validated
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;

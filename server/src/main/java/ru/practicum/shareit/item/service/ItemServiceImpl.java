@@ -42,7 +42,6 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public Item create(ItemDto itemDto, Long userId) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException(userId));
-        Item test = itemMapper.toModel(itemDto, userId);
         return itemRepository.save(itemMapper.toModel(itemDto, userId));
     }
 
@@ -90,8 +89,6 @@ public class ItemServiceImpl implements ItemService {
         List<Booking> bookings = bookingRepository.findAllByItemIdAndBookerIdAndEndBefore(itemId, userId, LocalDateTime.now());
         bookings.stream().filter(b -> b.getStatus() == BookingStatus.APPROVED).findFirst().orElseThrow(() ->
                 new ValidationException("Пользователь не бронировал этот предмет для оставления отзывов"));
-
-        Comment test = itemMapper.toModel(commentDto, user, itemId);
 
         return commentRepository.save(itemMapper.toModel(commentDto, user, itemId));
     }

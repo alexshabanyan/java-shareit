@@ -45,8 +45,8 @@ public class RequestController {
     }
 
     @GetMapping
-    Collection<RequestWithItemInfoDto> getOwnRequests(@RequestParam(defaultValue = "0") Integer from,
-                                                      @RequestParam(defaultValue = "10") Integer size,
+    Collection<RequestWithItemInfoDto> getOwnRequests(@RequestParam Integer from,
+                                                      @RequestParam Integer size,
                                                       @RequestHeader(Headers.HEADER_USER_ID) Long userId) {
         log.info("Получение списка своих запросов для пользователя userId={}, from={}, size={}, ", from, size, userId);
         List<Request> requests = requestService.getOwnRequests(userId, from, size);
@@ -56,8 +56,8 @@ public class RequestController {
     }
 
     @GetMapping("/all")
-    Collection<RequestWithItemInfoDto> getAllRequests(@RequestParam(defaultValue = "0") Integer from,
-                                                      @RequestParam(defaultValue = "10") Integer size,
+    Collection<RequestWithItemInfoDto> getAllRequests(@RequestParam Integer from,
+                                                      @RequestParam Integer size,
                                                       @RequestHeader(Headers.HEADER_USER_ID) Long userId) {
         log.info("Получение списка чужих запросов для пользователя userId={}, from={}, size={}", userId, from, size);
         List<Request> requests = requestService.getAllRequests(userId, from, size);
