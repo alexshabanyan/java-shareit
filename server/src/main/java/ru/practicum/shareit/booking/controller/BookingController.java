@@ -2,7 +2,6 @@ package ru.practicum.shareit.booking.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +18,7 @@ import ru.practicum.shareit.booking.model.BookingMapper;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.utils.Headers;
+
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
 @Slf4j
-@Validated
 public class BookingController {
     private final BookingService bookingService;
     private final BookingMapper bookingMapper;
@@ -47,21 +46,23 @@ public class BookingController {
     }
 
     @GetMapping
-    public Collection<BookingDto> getBookingsByState(@RequestParam(defaultValue = "0") Integer from,
-                                                     @RequestParam(defaultValue = "10") Integer size,
-                                                     @RequestHeader(Headers.HEADER_USER_ID) Long userId,
+    public Collection<BookingDto> getBookingsByState(@RequestHeader(Headers.HEADER_USER_ID) Long userId,
+                                                     @RequestParam Integer from,
+                                                     @RequestParam Integer size,
                                                      @RequestParam(required = false) String state) {
         log.info("Получение списка бронирований пользователя userId={}, фильтр по state={}", userId, state);
-        return bookingService.getBookingsForUser(userId, BookingState.parseState(state), from, size).stream().map(bookingMapper::toDto).collect(Collectors.toList());
+        return bookingService.getBookingsForUser(userId, BookingState.parseState(state), from, size)
+                .stream().map(bookingMapper::toDto).collect(Collectors.toList());
     }
 
     @GetMapping("/owner")
-    public Collection<BookingDto> getBookingsByStateOwner(@RequestParam(defaultValue = "0") Integer from,
-                                                          @RequestParam(defaultValue = "10") Integer size,
-                                                          @RequestHeader(Headers.HEADER_USER_ID) Long userId,
+    public Collection<BookingDto> getBookingsByStateOwner(@RequestHeader(Headers.HEADER_USER_ID) Long userId,
+                                                          @RequestParam Integer from,
+                                                          @RequestParam Integer size,
                                                           @RequestParam(required = false) String state) {
         log.info("Получение списка бронирований владельцем userId={}, фильтр по state={}", userId, state);
-        return bookingService.getBookingsForItemOwner(userId, BookingState.parseState(state), from, size).stream().map(bookingMapper::toDto).collect(Collectors.toList());
+        return bookingService.getBookingsForItemOwner(userId, BookingState.parseState(state), from, size)
+                .stream().map(bookingMapper::toDto).collect(Collectors.toList());
     }
 
     @PatchMapping("/{bookingId}")

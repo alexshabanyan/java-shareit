@@ -16,26 +16,22 @@ public class CustomBookingRepositoryImpl implements CustomBookingRepository {
     private EntityManager entityManager;
 
     @Override
-    public List<Booking> findLastBookingWithStatus(Set<Long> itemIds, LocalDateTime time,
-                                                   BookingStatus status) {
-        String sql = "SELECT DISTINCT ON (item_id) bk.* " +
-                "FROM bookings bk " +
-                "WHERE bk.item_id IN :itemIds AND (bk.date_end < :dateTime OR bk.date_start < :dateTime AND bk.date_end > :dateTime) AND bk.status = :status " +
+    public List<Booking> findLastBookingWithStatus(Set<Long> itemIds, LocalDateTime time, BookingStatus status) {
+        String sql = "SELECT DISTINCT ON (item_id) bk.* FROM bookings bk " +
+                "WHERE bk.item_id IN :itemIds AND (bk.date_end < :time OR bk.date_start < :time AND bk.date_end > :time) AND bk.status = :status " +
                 "ORDER BY bk.item_id, bk.date_end DESC";
         return entityManager.createNativeQuery(sql, Booking.class)
                 .setParameter("itemIds", itemIds)
-                .setParameter("dateTime", time)
-                .setParameter("dateTime", time)
-                .setParameter("dateTime", time)
+                .setParameter("time", time)
+                .setParameter("time", time)
+                .setParameter("time", time)
                 .setParameter("status", status.toString())
                 .getResultList();
     }
 
     @Override
-    public List<Booking> findNextBookingWithStatus(Set<Long> itemIds, LocalDateTime time,
-                                                   BookingStatus status) {
-        String sql = "SELECT DISTINCT ON (item_id) bk.* " +
-                "FROM bookings bk " +
+    public List<Booking> findNextBookingWithStatus(Set<Long> itemIds, LocalDateTime time, BookingStatus status) {
+        String sql = "SELECT DISTINCT ON (item_id) bk.* FROM bookings bk " +
                 "WHERE bk.item_id IN :itemIds AND bk.date_start > :time AND bk.status = :status " +
                 "ORDER BY bk.item_id, bk.date_start";
         return entityManager.createNativeQuery(sql, Booking.class)

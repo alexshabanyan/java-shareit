@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface CustomBookingRepository {
-    List<Booking> findLastBookingWithStatus(Set<Long> itemIds, LocalDateTime now, BookingStatus status);
+    List<Booking> findLastBookingWithStatus(Set<Long> itemIds, LocalDateTime time, BookingStatus status);
 
-    List<Booking> findNextBookingWithStatus(Set<Long> itemIds, LocalDateTime now, BookingStatus status);
+    List<Booking> findNextBookingWithStatus(Set<Long> itemIds, LocalDateTime time, BookingStatus status);
 }
