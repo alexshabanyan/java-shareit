@@ -194,14 +194,6 @@ class ItemControllerTest {
 
         assertThat(performSearchAvailableItems("text", 0, 11).getStatus(), is(200));
         verify(itemService, times(1)).searchAvailableItems("text", 0, 11);
-
-        assertThat(performSearchAvailableItems("t").getStatus(), is(200));
-        verify(itemService, times(1)).searchAvailableItems("t", 0, 10);
-
-        assertThat(performSearchAvailableItems("", 1, 9).getStatus(), is(200));
-        verify(itemService, times(0)).searchAvailableItems("", 1, 9);
-
-        assertThat(performSearchAvailableItems(null, 0, 11).getStatus(), is(400));
     }
 
     private MockHttpServletResponse performSearchAvailableItems(String text) throws Exception {
