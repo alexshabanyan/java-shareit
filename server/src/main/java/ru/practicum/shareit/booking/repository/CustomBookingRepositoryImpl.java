@@ -21,7 +21,7 @@ public class CustomBookingRepositoryImpl implements CustomBookingRepository {
         String sql = "SELECT DISTINCT ON (item_id) bk.* " +
                 "FROM bookings bk " +
                 "WHERE bk.item_id IN :itemIds AND (bk.date_end < :dateTime OR bk.date_start < :dateTime AND bk.date_end > :dateTime) AND bk.status = :status " +
-                "ORDER BY bk.date_end DESC";
+                "ORDER BY bk.item_id, bk.date_end DESC";
         return entityManager.createNativeQuery(sql, Booking.class)
                 .setParameter("itemIds", itemIds)
                 .setParameter("dateTime", time)
@@ -37,7 +37,7 @@ public class CustomBookingRepositoryImpl implements CustomBookingRepository {
         String sql = "SELECT DISTINCT ON (item_id) bk.* " +
                 "FROM bookings bk " +
                 "WHERE bk.item_id IN :itemIds AND bk.date_start > :time AND bk.status = :status " +
-                "ORDER BY bk.date_start";
+                "ORDER BY bk.item_id, bk.date_start";
         return entityManager.createNativeQuery(sql, Booking.class)
                 .setParameter("itemIds", itemIds)
                 .setParameter("time", time)
