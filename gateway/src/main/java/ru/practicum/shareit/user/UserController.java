@@ -15,6 +15,7 @@ import javax.validation.Valid;
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class UserController {
     private final UserClient userClient;
 
